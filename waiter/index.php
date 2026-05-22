@@ -7,8 +7,15 @@ auth('waiter');
 // Proses antar via GET (langsung di index.php, session sudah aktif)
 if (isset($_GET['antar'])) {
     $id = (int)$_GET['antar'];
-    mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id AND status='selesai'");
-    $msg = mysqli_affected_rows($con) ? 'Pesanan sudah diantar ke tamu!' : 'Gagal: status bukan siap antar';
+    $cek = mysqli_fetch_assoc(mysqli_query($con, "SELECT id,status FROM pesanan WHERE id=$id"));
+    if ($cek && $cek['status'] === 'selesai') {
+        mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id");
+        $msg = 'Pesanan sudah diantar ke tamu!';
+    } elseif ($cek) {
+        $msg = 'Gagal: status pesanan "' . $cek['status'] . '" (harus selesai)';
+    } else {
+        $msg = 'Gagal: ID pesanan tidak ditemukan';
+    }
     echo "<script>alert('$msg');location.href='?';</script>"; exit;
 }
 
