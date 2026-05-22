@@ -18,6 +18,8 @@
         .btn-cafe:hover { background: #5d3a37; color: #fff; }
         .btn-cafe-outline { border: 2px solid #4a2c2a; color: #4a2c2a; background: transparent; }
         .btn-cafe-outline:hover { background: #4a2c2a; color: #fff; }
+        .btn-outline-cafe { border: 2px solid #4a2c2a; color: #4a2c2a; background: transparent; padding: 10px 24px; border-radius: 8px; font-weight:600; }
+        .btn-outline-cafe:hover { background: #4a2c2a; color: #fff; }
         .card-order { border-left: 4px solid #4a2c2a; border-radius: 8px; }
         .status-baru { background: #fff3cd; }
         .status-proses { background: #cce5ff; }

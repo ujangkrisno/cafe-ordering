@@ -50,6 +50,7 @@ while ($r = mysqli_fetch_assoc($q)) { $chart_labels[] = tgl_indo($r['tgl']); $ch
 <div class="sidebar">
     <div class="brand"><h5><i class="fas fa-mug-hot me-1"></i> Cafe Admin</h5></div>
     <a href="index.php" class="active"><i class="fas fa-home"></i><span>Dashboard</span></a>
+    <a href="menu.php"><i class="fas fa-utensils"></i><span>Menu</span></a>
     <a href="laporan.php"><i class="fas fa-chart-bar"></i><span>Laporan</span></a>
     <hr style="border-color:rgba(255,255,255,0.1);margin:8px 12px;">
     <a href="../logout.php" style="color:#ef5350;"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>

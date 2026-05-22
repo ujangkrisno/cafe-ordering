@@ -11,6 +11,13 @@ $kategori = mysqli_query($con, "SELECT * FROM kategori ORDER BY nama");
         <h2 class="fw-bold mt-2" style="color:#4a2c2a;">Selamat Datang di Cafe Kami</h2>
         <p class="text-muted">Scan QR code untuk memesan makanan & minuman</p>
         <a href="menu.php" class="btn btn-cafe btn-lg mt-2"><i class="fas fa-utensils me-2"></i>Pesan Sekarang</a>
+        <a href="qrcode.php" class="btn btn-outline-cafe btn-lg mt-2 ms-2"><i class="fas fa-qrcode me-2"></i>Lihat QR</a>
+    </div>
+    <!-- QR Code Preview -->
+    <div class="mt-4 text-center">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=<?= urlencode((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']==='on'?'https':'http').'://'.$_SERVER['HTTP_HOST'].'/menu.php') ?>"
+             alt="QR" style="border-radius:10px;" class="border p-1 bg-white">
+        <p class="text-muted mt-1" style="font-size:0.75rem;">Scan dengan HP untuk pesan</p>
     </div>
     <div class="row g-3 mt-3">
         <?php while ($k = mysqli_fetch_assoc($kategori)): ?>
