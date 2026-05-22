@@ -4,6 +4,23 @@ include '../config/database.php';
 include '../config/functions.php';
 auth('waiter');
 include '../includes/header.php';
+
+// Handle konfirmasi antar via GET
+$flash_msg = '';
+if (isset($_GET['antar'])) {
+    $id = (int)$_GET['antar'];
+    mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id AND status='selesai'");
+    $flash_msg = mysqli_affected_rows($con) ? 'Pesanan sudah diantar ke tamu!' : 'Gagal: status bukan siap antar';
+    echo '<script>alert("'.$flash_msg.'");location.href="?";</script>';
+    exit;
+}
+if (isset($_GET['validasi'])) {
+    $id = (int)$_GET['validasi'];
+    mysqli_query($con, "UPDATE pesanan SET status='diproses' WHERE id=$id AND status='baru'");
+    mysqli_query($con, "UPDATE detail_pesanan SET status='dimasak' WHERE pesanan_id=$id AND status='menunggu'");
+    echo '<script>alert("Pesanan divalidasi!");location.href="?";</script>';
+    exit;
+}
 ?>
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -21,33 +38,6 @@ function loadOrders() {
         .then(function(r) { return r.text(); })
         .then(function(html) { document.getElementById('orderList').innerHTML = html; });
 }
-
-document.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-antar]');
-    if (btn) {
-        var id = btn.getAttribute('data-antar');
-        if (!confirm('Konfirmasi makanan sudah DIANTAR ke tamu?')) return;
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'api.php?action=antar&id=' + id, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = function() { alert(this.responseText); loadOrders(); };
-        xhr.onerror = function() { alert('Network error'); };
-        xhr.send('action=antar&id=' + id);
-        return;
-    }
-    btn = e.target.closest('[data-validasi]');
-    if (btn) {
-        var id = btn.getAttribute('data-validasi');
-        if (!confirm('Validasi pesanan ini?')) return;
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'api.php?action=validasi&id=' + id, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onload = function() { alert(this.responseText); loadOrders(); };
-        xhr.onerror = function() { alert('Network error'); };
-        xhr.send('action=validasi&id=' + id);
-    }
-});
-
 loadOrders();
 setInterval(loadOrders, 5000);
 </script>

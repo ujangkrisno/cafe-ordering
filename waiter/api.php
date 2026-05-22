@@ -4,7 +4,7 @@ include '../config/functions.php';
 $action = $_REQUEST['action'] ?? '';
 
 if ($action === 'list') {
-    // Pesanan Baru & Diproses (butuh validasi)
+    // Pesanan Baru & Diproses
     $q = mysqli_query($con, "SELECT p.*, 
         (SELECT COUNT(*) FROM detail_pesanan WHERE pesanan_id=p.id AND status='menunggu') as menunggu
         FROM pesanan p WHERE p.status IN ('baru','diproses') ORDER BY p.created_at DESC");
@@ -27,13 +27,13 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-1">';
             echo '<small class="fw-bold">Total: '.rupiah($r['total']).'</small>';
-            if ($r['status']=='baru') echo '<button class="btn btn-sm btn-success" data-validasi="'.$r['id'].'"><i class="fas fa-check"></i> Validasi</button>';
+            if ($r['status']=='baru') echo '<a class="btn btn-sm btn-success" href="?validasi='.$r['id'].'"><i class="fas fa-check"></i> Validasi</a>';
             echo '</div></div></div>';
         }
         echo '</div>';
     }
 
-    // Siap Antar (dapur sudah selesai)
+    // Siap Antar
     $q2 = mysqli_query($con, "SELECT p.* FROM pesanan p WHERE p.status='selesai' ORDER BY p.created_at ASC");
     $ada_siap = mysqli_num_rows($q2) > 0;
 
@@ -52,7 +52,7 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-2">';
             echo '<span class="fw-bold">'.rupiah($r['total']).'</span>';
-            echo '<button class="btn btn-sm btn-success" data-antar="'.$r['id'].'"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</button>';
+            echo '<a class="btn btn-sm btn-success" href="?antar='.$r['id'].'" onclick="return confirm(\'Konfirmasi makanan sudah DIANTAR ke tamu?\')"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</a>';
             echo '</div></div></div>';
         }
         echo '</div>';
@@ -84,10 +84,10 @@ if ($action === 'list') {
 }
 
 if ($action === 'validasi') {
-    $id = (int)$_POST['id'];
+    $id = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
     mysqli_query($con, "UPDATE pesanan SET status='diproses' WHERE id=$id AND status='baru'");
     mysqli_query($con, "UPDATE detail_pesanan SET status='dimasak' WHERE pesanan_id=$id AND status='menunggu'");
-    echo 'Pesanan divalidasi dan dikirim ke dapur!';
+    echo 'OK';
     exit;
 }
 
@@ -95,10 +95,7 @@ if ($action === 'antar') {
     $id = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
     if ($id) {
         mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id AND status='selesai'");
-        $affected = mysqli_affected_rows($con);
-        echo $affected ? 'OK: Pesanan sudah diantar' : 'Gagal: status bukan selesai atau ID tidak ditemukan';
-    } else {
-        echo 'Error: ID tidak valid';
+        echo mysqli_affected_rows($con) ? 'OK' : 'GAGAL';
     }
     exit;
 }
