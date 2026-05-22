@@ -22,8 +22,8 @@ function loadOrders() {
         .then(html => document.getElementById('orderList').innerHTML = html);
 }
 function selesai(id) {
-    fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action=selesai&id='+id })
-        .then(r => r.text()).then(function(m) { alert(m); loadOrders(); });
+    fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action=selesai_item&id='+id })
+        .then(r => r.text()).then(function(m) { loadOrders(); });
 }
 loadOrders();
 setInterval(loadOrders, 5000);
