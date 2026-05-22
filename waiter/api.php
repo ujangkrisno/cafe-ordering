@@ -27,7 +27,7 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-1">';
             echo '<small class="fw-bold">Total: '.rupiah($r['total']).'</small>';
-            if ($r['status']=='baru') echo '<button class="btn btn-sm btn-success" data-action="validasi" data-id="'.$r['id'].'"><i class="fas fa-check"></i> Validasi</button>';
+            if ($r['status']=='baru') echo '<button class="btn btn-sm btn-success" data-validasi="'.$r['id'].'"><i class="fas fa-check"></i> Validasi</button>';
             echo '</div></div></div>';
         }
         echo '</div>';
@@ -52,7 +52,7 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-2">';
             echo '<span class="fw-bold">'.rupiah($r['total']).'</span>';
-            echo '<button class="btn btn-sm btn-success" data-action="antar" data-id="'.$r['id'].'"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</button>';
+            echo '<button class="btn btn-sm btn-success" data-antar="'.$r['id'].'"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</button>';
             echo '</div></div></div>';
         }
         echo '</div>';
@@ -92,8 +92,13 @@ if ($action === 'validasi') {
 }
 
 if ($action === 'antar') {
-    $id = (int)$_POST['id'];
-    mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id AND status='selesai'");
-    echo 'Pesanan sudah diantar ke tamu!';
+    $id = (int)($_POST['id'] ?? $_GET['id'] ?? 0);
+    if ($id) {
+        mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id AND status='selesai'");
+        $affected = mysqli_affected_rows($con);
+        echo $affected ? 'OK: Pesanan sudah diantar' : 'Gagal: status bukan selesai atau ID tidak ditemukan';
+    } else {
+        echo 'Error: ID tidak valid';
+    }
     exit;
 }

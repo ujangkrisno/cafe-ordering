@@ -19,27 +19,32 @@ include '../includes/header.php';
 function loadOrders() {
     fetch('api.php?action=list')
         .then(function(r) { return r.text(); })
-        .then(function(html) {
-            document.getElementById('orderList').innerHTML = html;
-        });
+        .then(function(html) { document.getElementById('orderList').innerHTML = html; });
 }
 
 document.addEventListener('click', function(e) {
-    var btn = e.target.closest('[data-action]');
-    if (!btn) return;
-    var action = btn.getAttribute('data-action');
-    var id = btn.getAttribute('data-id');
-    if (action === 'validasi') {
-        if (!confirm('Validasi pesanan ini?')) return;
-        fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action=validasi&id='+id })
-            .then(function(r) { return r.text(); })
-            .then(function(m) { alert(m); loadOrders(); });
-    }
-    if (action === 'antar') {
+    var btn = e.target.closest('[data-antar]');
+    if (btn) {
+        var id = btn.getAttribute('data-antar');
         if (!confirm('Konfirmasi makanan sudah DIANTAR ke tamu?')) return;
-        fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action=antar&id='+id })
-            .then(function(r) { return r.text(); })
-            .then(function(m) { alert(m); loadOrders(); });
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'api.php?action=antar&id=' + id, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() { alert(this.responseText); loadOrders(); };
+        xhr.onerror = function() { alert('Network error'); };
+        xhr.send('action=antar&id=' + id);
+        return;
+    }
+    btn = e.target.closest('[data-validasi]');
+    if (btn) {
+        var id = btn.getAttribute('data-validasi');
+        if (!confirm('Validasi pesanan ini?')) return;
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'api.php?action=validasi&id=' + id, true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() { alert(this.responseText); loadOrders(); };
+        xhr.onerror = function() { alert('Network error'); };
+        xhr.send('action=validasi&id=' + id);
     }
 });
 
