@@ -27,7 +27,7 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-1">';
             echo '<small class="fw-bold">Total: '.rupiah($r['total']).'</small>';
-            if ($r['status']=='baru') echo '<button class="btn btn-sm btn-success btn-validasi" data-id="'.$r['id'].'"><i class="fas fa-check"></i> Validasi</button>';
+            if ($r['status']=='baru') echo '<button class="btn btn-sm btn-success" data-action="validasi" data-id="'.$r['id'].'"><i class="fas fa-check"></i> Validasi</button>';
             echo '</div></div></div>';
         }
         echo '</div>';
@@ -52,7 +52,7 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-2">';
             echo '<span class="fw-bold">'.rupiah($r['total']).'</span>';
-            echo '<button class="btn btn-sm btn-success btn-antar" data-id="'.$r['id'].'"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</button>';
+            echo '<button class="btn btn-sm btn-success" data-action="antar" data-id="'.$r['id'].'"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</button>';
             echo '</div></div></div>';
         }
         echo '</div>';
