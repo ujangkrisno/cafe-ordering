@@ -52,7 +52,7 @@ if ($action === 'list') {
             echo '</ul>';
             echo '<div class="d-flex justify-content-between align-items-center mt-2">';
             echo '<span class="fw-bold">'.rupiah($r['total']).'</span>';
-            echo '<a class="btn btn-sm btn-success" href="?antar='.$r['id'].'" onclick="return confirm(\'Konfirmasi makanan sudah DIANTAR ke tamu?\')"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</a>';
+            echo '<a class="btn btn-sm btn-success" href="antar.php?id='.$r['id'].'" onclick="return confirm(\'Konfirmasi makanan sudah DIANTAR ke tamu?\')"><i class="fas fa-motorcycle me-1"></i>Konfirmasi Diantar</a>';
             echo '</div></div></div>';
         }
         echo '</div>';
