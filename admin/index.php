@@ -20,6 +20,12 @@ $omzet_bulan = $r['t'];
 $q = mysqli_query($con, "SELECT COUNT(*) as c FROM pesanan WHERE status='baru'");
 $pesanan_baru = mysqli_fetch_assoc($q)['c'];
 
+$q = mysqli_query($con, "SELECT COUNT(*) as c FROM pesanan WHERE status='selesai'");
+$siap_antar = mysqli_fetch_assoc($q)['c'];
+
+$q = mysqli_query($con, "SELECT COUNT(*) as c FROM pesanan WHERE status IN ('selesai','diantar')");
+$perlu_bayar = mysqli_fetch_assoc($q)['c'];
+
 $q = mysqli_query($con, "SELECT DATE(created_at) as tgl, SUM(total) as total FROM pesanan WHERE status='dibayar' AND created_at >= DATE_SUB('$hari', INTERVAL 7 DAY) GROUP BY DATE(created_at) ORDER BY tgl");
 $chart_labels = []; $chart_data = [];
 while ($r = mysqli_fetch_assoc($q)) { $chart_labels[] = tgl_indo($r['tgl']); $chart_data[] = (float)$r['total']; }
@@ -63,9 +69,9 @@ while ($r = mysqli_fetch_assoc($q)) { $chart_labels[] = tgl_indo($r['tgl']); $ch
 
     <div class="row g-3 mb-4">
         <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-danger"><div class="card-body"><div class="label">Pesanan Baru</div><div class="value text-danger"><?= $pesanan_baru ?></div></div></div></div>
-        <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-success"><div class="card-body"><div class="label">Transaksi Hari Ini</div><div class="value text-success"><?= $trans_hari ?></div></div></div></div>
-        <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-primary"><div class="card-body"><div class="label">Omzet Hari Ini</div><div class="value text-primary"><?= rupiah($omzet_hari) ?></div></div></div></div>
-        <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-warning"><div class="card-body"><div class="label">Omzet Bulan Ini</div><div class="value text-warning"><?= rupiah($omzet_bulan) ?></div></div></div></div>
+        <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-info"><div class="card-body"><div class="label">Siap Antar</div><div class="value text-info"><?= $siap_antar ?></div></div></div></div>
+        <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-warning"><div class="card-body"><div class="label">Perlu Bayar</div><div class="value text-warning"><?= $perlu_bayar ?></div></div></div></div>
+        <div class="col-6 col-md-3"><div class="card card-stat border-start border-4 border-success"><div class="card-body"><div class="label">Omzet Bulan Ini</div><div class="value text-success"><?= rupiah($omzet_bulan) ?></div></div></div></div>
     </div>
 
     <div class="card card-stat p-3">

@@ -40,7 +40,7 @@ CREATE TABLE pesanan (
     hp VARCHAR(20) NOT NULL,
     email VARCHAR(100) DEFAULT '',
     no_kursi VARCHAR(20) NOT NULL,
-    status ENUM('baru','diproses','selesai','dibayar','dibatalkan') DEFAULT 'baru',
+    status ENUM('baru','diproses','selesai','diantar','dibayar','dibatalkan') DEFAULT 'baru',
     total DECIMAL(12,2) DEFAULT 0,
     catatan TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

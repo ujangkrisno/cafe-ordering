@@ -1,5 +1,6 @@
 <?php
 include 'config/database.php';
+@mysqli_query($con, "ALTER TABLE pesanan MODIFY status ENUM('baru','diproses','selesai','diantar','dibayar','dibatalkan') DEFAULT 'baru'");
 $drop = ['detail_pesanan','pesanan','menu','kategori','users'];
 foreach ($drop as $t) @mysqli_query($con, "DROP TABLE IF EXISTS $t");
 $sql = file_get_contents('database.sql');
