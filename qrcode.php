@@ -3,7 +3,7 @@ $title = 'QR Code Menu';
 include 'config/database.php';
 include 'config/functions.php';
 include 'includes/header.php';
-$ip_server = $_SERVER['SERVER_ADDR'] ?? '127.0.0.1';
+$ip_server = getLanIp();
 $port = $_SERVER['SERVER_PORT'];
 $base_url = "http://$ip_server:$port";
 $menu_url = $base_url . '/menu.php';

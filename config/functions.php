@@ -26,3 +26,26 @@ function auth($role = null) {
         header('Location: index.php'); exit;
     }
 }
+
+function getLanIp() {
+    $ips = [];
+    if (function_exists('net_get_interfaces')) {
+        foreach (net_get_interfaces() as $name => $iface) {
+            if (strpos($name, 'Loopback') !== false || strpos($name, 'lo') !== false) continue;
+            foreach ($iface['unicast'] ?? [] as $addr) {
+                if ($addr['address'] && filter_var($addr['address'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) && !filter_var($addr['address'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                    $ips[] = $addr['address'];
+                }
+            }
+        }
+    }
+    if (!$ips) {
+        exec('ipconfig', $out, $rc);
+        foreach ($out as $line) {
+            if (preg_match('/IPv4 Address[^:]*:\s*([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)/', $line, $m)) {
+                if (!preg_match('/^169\.254\./', $m[1])) $ips[] = $m[1];
+            }
+        }
+    }
+    return $ips[0] ?? '127.0.0.1';
+}

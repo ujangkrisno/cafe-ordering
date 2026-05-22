@@ -4,7 +4,7 @@ include 'config/database.php';
 include 'config/functions.php';
 include 'includes/header.php';
 $kategori = mysqli_query($con, "SELECT * FROM kategori ORDER BY nama");
-$ip_server = $_SERVER['SERVER_ADDR'] ?? '127.0.0.1';
+$ip_server = getLanIp();
 $port = $_SERVER['SERVER_PORT'];
 $menu_url = "http://$ip_server:$port/menu.php";
 ?>
