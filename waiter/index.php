@@ -4,13 +4,6 @@ include '../config/database.php';
 include '../config/functions.php';
 auth('waiter');
 
-// Handle POST antar
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['antar'])) {
-    $id = (int)$_POST['antar'];
-    mysqli_query($con, "UPDATE pesanan SET status='diantar' WHERE id=$id AND status='selesai'");
-    $msg = mysqli_affected_rows($con) ? 'Pesanan sudah diantar ke tamu!' : 'Gagal!';
-    echo "<script>alert('$msg');location.href='?';</script>"; exit;
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['validasi'])) {
     $id = (int)$_POST['validasi'];
     mysqli_query($con, "UPDATE pesanan SET status='diproses' WHERE id=$id AND status='baru'");
@@ -63,9 +56,7 @@ $q_riwayat = mysqli_query($con, "SELECT p.* FROM pesanan p WHERE p.status='diant
                 <hr class="my-1"><ul class="list-unstyled mb-1"><?php while($d=mysqli_fetch_assoc($detail)): ?><li><small><?= $d['qty'] ?>x <?= $d['menu'] ?> = <?= rupiah($d['subtotal']) ?></small></li><?php endwhile; ?></ul>
                 <div class="d-flex justify-content-between align-items-center mt-1">
                     <span class="fw-bold"><?= rupiah($r['total']) ?></span>
-                    <form method="post" onsubmit="return confirm('Konfirmasi makanan sudah DIANTAR ke tamu?')">
-                        <button class="btn btn-sm btn-success" name="antar" value="<?= $r['id'] ?>"><i class="fas fa-motorcycle me-1"></i> Konfirmasi Diantar</button>
-                    </form>
+                    <a class="btn btn-sm btn-success" href="antar.php?id=<?= $r['id'] ?>" onclick="return confirm('Konfirmasi makanan sudah DIANTAR ke tamu?')"><i class="fas fa-motorcycle me-1"></i> Konfirmasi Diantar</a>
                 </div>
             </div>
         </div>
