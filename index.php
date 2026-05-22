@@ -4,6 +4,9 @@ include 'config/database.php';
 include 'config/functions.php';
 include 'includes/header.php';
 $kategori = mysqli_query($con, "SELECT * FROM kategori ORDER BY nama");
+$ip_server = $_SERVER['SERVER_ADDR'] ?? '127.0.0.1';
+$port = $_SERVER['SERVER_PORT'];
+$menu_url = "http://$ip_server:$port/menu.php";
 ?>
 <div class="container py-4">
     <div class="text-center mb-4">
@@ -13,9 +16,8 @@ $kategori = mysqli_query($con, "SELECT * FROM kategori ORDER BY nama");
         <a href="menu.php" class="btn btn-cafe btn-lg mt-2"><i class="fas fa-utensils me-2"></i>Pesan Sekarang</a>
         <a href="qrcode.php" class="btn btn-outline-cafe btn-lg mt-2 ms-2"><i class="fas fa-qrcode me-2"></i>Lihat QR</a>
     </div>
-    <!-- QR Code Preview -->
     <div class="mt-4 text-center">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=<?= urlencode((isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']==='on'?'https':'http').'://'.$_SERVER['HTTP_HOST'].'/menu.php') ?>"
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=<?= urlencode($menu_url) ?>"
              alt="QR" style="border-radius:10px;" class="border p-1 bg-white">
         <p class="text-muted mt-1" style="font-size:0.75rem;">Scan dengan HP untuk pesan</p>
     </div>
