@@ -32,10 +32,18 @@ function beep() {
     } catch(e) {}
 }
 
+function api(action, id, msg) {
+    if (msg && !confirm(msg)) return;
+    fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action='+action+'&id='+id })
+        .then(function(r) { return r.text(); })
+        .then(function(m) { alert(m); loadOrders(); })
+        .catch(function(e) { alert('Error: ' + e.message); });
+}
+
 function loadOrders() {
     fetch('api.php?action=list')
-        .then(r => r.text())
-        .then(html => {
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
             document.getElementById('orderList').innerHTML = html;
             var siap = (html.match(/siap antar/g) || []).length;
             var el = document.getElementById('notifCount');
@@ -43,7 +51,6 @@ function loadOrders() {
                 beep();
                 el.textContent = '🔔 ' + siap + ' siap antar!';
                 el.style.display = 'inline';
-                // Flash title
                 if (titleFlash) clearInterval(titleFlash);
                 var origTitle = document.title;
                 var flash = true;
@@ -58,22 +65,22 @@ function loadOrders() {
                 }, 8000);
             } else if (siap === 0) {
                 el.style.display = 'none';
-            } else {
-                lastSiapCount = siap;
             }
             if (siap > 0) lastSiapCount = siap;
-        });
+        })
+        .catch(function(e) { console.log('Load error:', e); });
 }
-function validasi(id) {
-    if (!confirm('Validasi pesanan ini?')) return;
-    fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action=validasi&id='+id })
-        .then(r => r.text()).then(function(m) { alert(m); loadOrders(); });
-}
-function antar(id) {
-    if (!confirm('Konfirmasi makanan sudah DIANTAR ke tamu?')) return;
-    fetch('api.php', { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'action=antar&id='+id })
-        .then(r => r.text()).then(function(m) { alert(m); loadOrders(); });
-}
+
+// Event delegation untuk semua tombol
+document.addEventListener('click', function(e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    var id = btn.getAttribute('data-id');
+    if (!id) return;
+    if (btn.classList.contains('btn-validasi')) api('validasi', id, 'Validasi pesanan ini?');
+    if (btn.classList.contains('btn-antar')) api('antar', id, 'Konfirmasi makanan sudah DIANTAR ke tamu?');
+});
+
 loadOrders();
 setInterval(loadOrders, 5000);
 </script>
