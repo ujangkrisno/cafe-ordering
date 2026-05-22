@@ -31,8 +31,14 @@ $kategori = mysqli_query($con, "SELECT * FROM kategori ORDER BY nama");
         <?php while ($m = mysqli_fetch_assoc($menu)): ?>
         <div class="col-6 col-md-4 col-lg-3">
             <div class="card card-menu h-100" onclick="tambahKeranjang(<?= $m['id'] ?>, '<?= addslashes($m['nama']) ?>', <?= $m['harga'] ?>)">
-                <div class="card-img-top d-flex align-items-center justify-content-center" style="height:120px;">
-                    <i class="fas fa-<?= $m['kategori_id']==2?'coffee':'utensils' ?>" style="font-size:2.5rem;color:#4a2c2a;"></i>
+                <div class="card-img-top" style="height:120px;overflow:hidden;background:#e8d5c4;">
+                    <?php if ($m['gambar']): ?>
+                    <img src="<?= $m['gambar'] ?>" style="width:100%;height:100%;object-fit:cover;">
+                    <?php else: ?>
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <i class="fas fa-<?= $m['kategori_id']==2?'coffee':'utensils' ?>" style="font-size:2.5rem;color:#4a2c2a;"></i>
+                    </div>
+                    <?php endif; ?>
                 </div>
                 <div class="card-body p-2">
                     <h6 class="fw-bold mb-1"><?= $m['nama'] ?></h6>
