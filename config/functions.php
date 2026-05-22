@@ -21,9 +21,9 @@ function generateNoOrder() {
 }
 
 function auth($role = null) {
-    if (!isset($_SESSION['user_id'])) { header('Location: login.php'); exit; }
+    if (!isset($_SESSION['user_id'])) { header('Location: /login.php'); exit; }
     if ($role && $_SESSION['user_role'] !== $role && $_SESSION['user_role'] !== 'admin') {
-        header('Location: index.php'); exit;
+        header('Location: /login.php'); exit;
     }
 }
 
